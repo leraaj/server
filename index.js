@@ -5,6 +5,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+require("dotenv").config();
 
 const app = express();
 const BASE_URL = "http://localhost:3000";
@@ -137,9 +138,7 @@ app.listen(3001, () => {
 });
 mongoose.set("strictQuery", false);
 mongoose
-  .connect(
-    "mongodb+srv://root:HjWuslR6enxkt6Fr@darkshots.ujornr5.mongodb.net/?retryWrites=true&w=majority"
-  )
+  .connect(process.env.MONGODB_URL)
   .then(() => {
     console.log("Connected to DB");
   })
