@@ -5,7 +5,6 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-require("dotenv").config();
 
 const app = express();
 const BASE_URL = "http://localhost:3000";
@@ -104,6 +103,7 @@ app.post("/api/user/login", async (request, response) => {
         })
         .status(200)
         .json({
+          user: user,
           message: "Cookie set!",
           redirectUrl: `/admin/accounts`,
         });
@@ -133,12 +133,14 @@ app.post("/api/user/current-user", async (request, response) => {
   }
 });
 
-app.listen(process.env.PORT, () => {
+app.listen(3001, () => {
   console.log("server is running");
 });
 mongoose.set("strictQuery", false);
 mongoose
-  .connect(process.env.MONGODB_URL)
+  .connect(
+    "mongodb+srv://root:HjWuslR6enxkt6Fr@darkshots.ujornr5.mongodb.net/?retryWrites=true&w=majority"
+  )
   .then(() => {
     console.log("Connected to DB");
   })
