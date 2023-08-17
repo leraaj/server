@@ -133,7 +133,7 @@ app.post("/api/user/current-user", async (request, response) => {
   }
 });
 
-app.listen(3001, () => {
+app.listen(process.env.PORT, () => {
   console.log("server is running");
 });
 mongoose.set("strictQuery", false);
