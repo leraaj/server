@@ -5,9 +5,11 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-
 const app = express();
 const BASE_URL = "http://localhost:3000";
+const MONGODB_URL = process.env.MONGODB_URL;
+const PORT = process.env.PORT;
+
 app.use(cors({ credentials: true, origin: [BASE_URL] }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -133,14 +135,12 @@ app.post("/api/user/current-user", async (request, response) => {
   }
 });
 
-app.listen(3001, () => {
+app.listen(PORT, () => {
   console.log("server is running");
 });
 mongoose.set("strictQuery", false);
 mongoose
-  .connect(
-    "mongodb+srv://root:HjWuslR6enxkt6Fr@darkshots.ujornr5.mongodb.net/?retryWrites=true&w=majority"
-  )
+  .connect(MONGODB_URL)
   .then(() => {
     console.log("Connected to DB");
   })
