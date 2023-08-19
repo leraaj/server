@@ -8,6 +8,7 @@ const bcrypt = require("bcrypt");
 const app = express();
 const BASE_URL = "http://localhost:3000";
 const RENDER_URL = "https://darkshot-aj.onrender.com";
+require("dotenv").config();
 const MONGODB_URL = process.env.MONGODB_URL;
 const PORT = process.env.PORT;
 
