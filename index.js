@@ -25,7 +25,7 @@ const createToken = (id) => {
 app.get("/api/users", async (request, response) => {
   try {
     const user = await UserModel.find({});
-    response.status(200).json(user);
+    response.status(200).json(user, JSON_PRETTY_PRINT);
   } catch (error) {
     console.log(error.message);
     response.status(500).json({ message: error.message });
