@@ -7,10 +7,11 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const app = express();
 const BASE_URL = "http://localhost:3000";
+const RENDER_URL = "https://darkshot-aj.onrender.com";
 const MONGODB_URL = process.env.MONGODB_URL;
 const PORT = process.env.PORT;
 
-app.use(cors({ credentials: true, origin: [BASE_URL] }));
+app.use(cors({ credentials: true, origin: [BASE_URL, RENDER_URL] }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -26,7 +27,7 @@ app.get("/api/users", async (request, response) => {
     response.status(200).json(user);
   } catch (error) {
     console.log(error.message);
-    response.status(500).json("{ message: error.message }");
+    response.status(500).json({ message: error.message });
   }
 });
 
