@@ -37,7 +37,7 @@ app.post("/api/user", async (request, response) => {
     response.status(200).json(user);
   } catch (error) {
     console.log(error.message);
-    response.status(500).json({ message: error.message });
+    response.status(500).json("Get Users Error");
   }
 });
 app.get("/api/user/:id", async (request, response) => {
