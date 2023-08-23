@@ -25,7 +25,7 @@ const createToken = (id) => {
 app.get("/api/users", async (request, response) => {
   try {
     const user = await UserModel.find({});
-    response.status(200).type("json").send(JSON.stringify(user, null, 2));
+    response.status(200).json(user);
   } catch (error) {
     console.log(error.message);
     response.status(500).json({ message: error.message });
@@ -38,14 +38,14 @@ app.post("/api/user", async (request, response) => {
     response.status(200).json(user);
   } catch (error) {
     console.log(error.message);
-    response.status(500).json("Get Users Error");
+    response.status(500).json({ message: error.message });
   }
 });
 app.get("/api/user/:id", async (request, response) => {
   try {
     const { id } = request.params;
     const user = await UserModel.findById(id);
-    response.status(200).json(user);
+    response.status(200).json({ user });
   } catch (error) {
     response.status(500).json({ message: error.message });
   }
@@ -55,14 +55,13 @@ app.put("/api/user/:id", async (request, response) => {
   try {
     const { id } = request.params;
     const user = await UserModel.findByIdAndUpdate(id, request.body);
-
     if (!user) {
       return response
         .status(404)
         .json({ message: `cannot find any product with ID: ${id}` });
     }
     const userUpdatedData = await UserModel.findById(id);
-    response.status(200).json(userUpdatedData);
+    response.status(200).json({ userUpdatedData });
   } catch (error) {
     response.status(500).json({ message: error.message });
   }
@@ -85,18 +84,27 @@ app.delete("/api/user/:id", async (request, response) => {
 
 app.post("/api/user/login", async (request, response) => {
   try {
-    const user = await UserModel.findOne({
-      username: request.body.username,
-    });
+    const inputUsername = request.body.username;
+    const inputPassword = request.body.password;
 
-    if (!user) {
-      return response.status(401).json({ message: "User not found." });
+    const userFields = Object.keys(request.body);
+    let isEmptyField = false;
+    for (const field of userFields) {
+      if (!request.body[field]) {
+        isEmptyField = true;
+        break; // Exit the loop if any empty field is found
+      }
     }
-
-    const passwordMatch = await bcrypt.compare(
-      request.body.password,
-      user.password
-    );
+    if (isEmptyField) {
+      return response.status(401).json({ message: "All fields are required" });
+    }
+    const user = await UserModel.findOne({
+      username: inputUsername,
+    });
+    if (!user) {
+      return response.status(401).json({ message: "User doesn't exists" });
+    }
+    const passwordMatch = await bcrypt.compare(inputPassword, user.password);
 
     if (passwordMatch) {
       var userToken = createToken(user.id);
@@ -137,13 +145,13 @@ app.post("/api/user/current-user", async (request, response) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log("server is running");
-});
 mongoose.set("strictQuery", false);
 mongoose
   .connect(MONGODB_URL)
   .then(() => {
+    app.listen(PORT, () => {
+      console.log("server is running");
+    });
     console.log("Connected to DB");
   })
   .catch((err) => {

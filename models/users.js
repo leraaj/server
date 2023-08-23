@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema(
     username: { type: String, required: true, unique: true },
     password: {
       type: String,
-      required: [true, "please enter password"],
+      required: [true, "Please enter password"],
     },
   },
   {
@@ -28,17 +28,23 @@ userSchema.post("save", function (doc, next) {
 });
 
 userSchema.pre("findOneAndUpdate", async function (next) {
-  const salt = await bcrypt.genSalt();
-  const update = this.getUpdate();
-  if (update.password) {
-    const passwordHash = await bcrypt.hash(update.password, salt);
-    this.setUpdate({
-      $set: {
-        password: passwordHash,
-      },
-    });
+  try {
+    // const salt = await bcrypt.genSalt(10);
+    // this.password = await bcrypt.hash(this.password, salt);
+    // console.log(this.password);
+    // next();
+    if (this._update.password) {
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(
+        this._update.password,
+        saltRounds
+      );
+      this._update.password = hashedPassword;
+      next();
+    }
+  } catch (error) {
+    next(error);
   }
-  next();
 });
 userSchema.post("findOneAndUpdate", function (doc, next) {
   console.log("user was updated & saved", doc);
