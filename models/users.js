@@ -3,12 +3,24 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const userSchema = new mongoose.Schema(
   {
-    fullName: { type: String, required: [true, "Please enter fullname"] },
+    fullName: {
+      type: String,
+      required: [true, "Please enter fullname"],
+      unique: true,
+    },
     contact: { type: String, required: true },
+    email: { type: String, required: true },
     username: { type: String, required: true, unique: true },
     password: {
       type: String,
       required: [true, "Please enter password"],
+    },
+    position: {
+      type: Number,
+      required: [true, "Please select position"],
+      // 1 = admin
+      // 2 = client
+      // 3 = applicant
     },
   },
   {
@@ -18,8 +30,7 @@ const userSchema = new mongoose.Schema(
 userSchema.pre("save", async function (next) {
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password, salt);
-
-  console.log("user about to be  created & saved", this);
+  console.log("user about to be created & saved", this);
   next();
 });
 userSchema.post("save", function (doc, next) {
@@ -50,10 +61,6 @@ userSchema.post("findOneAndUpdate", function (doc, next) {
   console.log("user was updated & saved", doc);
   next();
 });
-//identifier <variableName> = mongoose.model('<collectionName>', <variableSchema>)
+
 const UserModel = mongoose.model("users", userSchema);
-
-// module.exports = <variableName>
-
 module.exports = UserModel;
-//Export the User varliable to be use on index.js
