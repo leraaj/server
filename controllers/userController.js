@@ -1,10 +1,13 @@
 const UserModel = require("../models/users");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+require("dotenv").config();
+
+const secret = process.env.JWT_SECRET;
 
 const cookieExpires = 3 * 24 * 60 * 60;
 const createToken = (id) => {
-  return jwt.sign({ id }, "cookie", {
+  return jwt.sign({ id }, secret, {
     expiresIn: cookieExpires,
   });
 };
