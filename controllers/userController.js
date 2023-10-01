@@ -98,7 +98,7 @@ const login = async (request, response) => {
     const passwordMatch = await bcrypt.compare(inputPassword, user.password);
     const url =
       user.position === 1
-        ? "/admin/accounts"
+        ? "/accounts"
         : user.position === 2 || user.position === 3
         ? "/profile"
         : null;
