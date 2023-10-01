@@ -10,11 +10,12 @@ const postRoute = require("./routes/postRoute");
 // ENV
 const BASE = process.env.BASE_URL;
 const RENDER = process.env.RENDER_URL;
+const NETLIFY = process.env.NETLIFY_URL;
 const MONGODB_URL = process.env.MONGODB_URL;
 const PORT = process.env.PORT;
 
 // app.use(cors({ credentials: true, origin: [BASE, RENDER] }));
-app.use(cors({ credentials: true, origin: [RENDER] }));
+app.use(cors({ credentials: true, origin: [BASE, RENDER, NETLIFY] }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
