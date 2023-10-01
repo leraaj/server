@@ -15,6 +15,7 @@ const MONGODB_URL = process.env.MONGODB_URL;
 const PORT = process.env.PORT;
 
 // app.use(cors({ credentials: true, origin: [BASE, RENDER] }));
+app.use(cors());
 app.use(cors({ credentials: true, origin: [BASE, RENDER, NETLIFY] }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
