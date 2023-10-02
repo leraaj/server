@@ -96,7 +96,7 @@ const login = async (request, response) => {
     if (!user) {
       return response
         .status(401)
-        .json({ message: "Invalid username/password:User doesn't exists" });
+        .json({ message: "Invalid username/password: User doesn't exist" });
     }
     const passwordMatch = await bcrypt.compare(inputPassword, user.password);
     const url =
@@ -108,18 +108,28 @@ const login = async (request, response) => {
 
     if (passwordMatch) {
       var userToken = createToken(user.id);
-      response
-        .cookie("Auth_Token", userToken, {
-          httpOnly: true,
-          maxAge: cookieExpires,
-        })
-        .status(200)
-        .json({
-          user: user,
-          message: "Cookie set successfully",
-          redirectUrl: url,
-          token: userToken,
-        });
+
+      // Set CORS headers to allow requests from your frontend
+      response.setHeader(
+        "Access-Control-Allow-Origin",
+        "https://darkshots-demo.netlify.app"
+      );
+      response.setHeader("Access-Control-Allow-Credentials", "true");
+
+      // Set the cookie with proper options
+      response.cookie("Auth_Token", userToken, {
+        httpOnly: true,
+        maxAge: cookieExpires * 1000, // Convert seconds to milliseconds
+        secure: process.env.NODE_ENV === "production", // Only secure in production
+        sameSite: "Strict", // Set the sameSite attribute
+      });
+
+      response.status(200).json({
+        user: user,
+        message: "Cookie set successfully",
+        redirectUrl: url,
+        token: userToken,
+      });
     } else {
       response.status(401).json({ message: "Invalid username/password" });
     }
@@ -127,6 +137,7 @@ const login = async (request, response) => {
     response.status(500).json({ message: "Server Error: " + error.message });
   }
 };
+
 const logout = async (request, response) => {
   try {
     response.clearCookie("Auth_Token");
