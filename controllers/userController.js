@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 
+const RENDER_URL = process.env.RENDER_URL;
 const secret = process.env.JWT_SECRET;
 
 const cookieExpires = 3 * 24 * 60 * 60;
@@ -110,10 +111,7 @@ const login = async (request, response) => {
       var userToken = createToken(user.id);
 
       // Set CORS headers to allow requests from your frontend
-      response.setHeader(
-        "Access-Control-Allow-Origin",
-        "https://darkshots-demo.netlify.app"
-      );
+      response.setHeader("Access-Control-Allow-Origin", RENDER_URL);
       response.setHeader("Access-Control-Allow-Credentials", "true");
 
       // Set the cookie with proper options
