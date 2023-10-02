@@ -7,7 +7,7 @@ const secret = process.env.JWT_SECRET;
 
 const cookieExpires = 3 * 24 * 60 * 60;
 const createToken = (id) => {
-  return jwt.sign({ id }, secret, {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: cookieExpires,
   });
 };
