@@ -148,7 +148,7 @@ const currentUser = async (request, response) => {
     }
 
     // Verify and decode the JWT token
-    jwt.verify(token, "cookie", async (err, decoded) => {
+    jwt.verify(token, secret, async (err, decoded) => {
       if (err) {
         return response.status(401).json({ message: "Invalid token" });
       }
