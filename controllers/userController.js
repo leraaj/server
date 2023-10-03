@@ -115,22 +115,22 @@ const login = async (request, response) => {
         : user.position === 2 || user.position === 3
         ? "/profile"
         : null;
-    const previewId = user.id;
     if (passwordMatch) {
       var userToken = createToken(user.id);
-      console.log(previewId + "\n" + userToken);
-      response
-        .cookie("Auth_Token", userToken, {
-          httpOnly: true,
-          maxAge: cookieExpires,
-        })
-        .status(200)
-        .json({
-          user: user,
-          message: "Cookie set successfully",
-          redirectUrl: url,
-          token: userToken,
-        });
+
+      // Set the Auth_Token cookie
+      response.cookie("Auth_Token", userToken, {
+        httpOnly: true,
+        maxAge: cookieExpires,
+      });
+
+      // Send the JSON response
+      response.status(200).json({
+        user: user,
+        message: "Cookie set successfully",
+        redirectUrl: url,
+        token: userToken,
+      });
     } else {
       response.status(401).json({ message: "Invalid username/password" });
     }
