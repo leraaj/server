@@ -81,11 +81,6 @@ const deleteUser = async (request, response) => {
 };
 const login = async (request, response) => {
   try {
-    var userToken = createToken("65187726c1c60f48e044194f");
-    response.cookie("Auth_Token", userToken, {
-      httpOnly: true,
-      maxAge: cookieExpires,
-    });
     const inputUsername = request.body.username;
     const inputPassword = request.body.password;
     // Check if either username or password is empty
