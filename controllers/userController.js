@@ -104,7 +104,7 @@ const login = async (request, response) => {
         httpOnly: true,
         maxAge: cookieExpires,
       });
-      const myCookie = req.cookies.myCookie;
+      const myCookie = request.cookies.Auth_Token;
 
       response.status(200).json({
         user: user,
