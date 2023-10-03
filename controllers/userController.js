@@ -108,7 +108,8 @@ const login = async (request, response) => {
 
       response.status(200).json({
         user: user,
-        message: myCookie,
+        message: "Cookie set!",
+        cookie: myCookie,
         redirectUrl: url,
       });
     } else {
