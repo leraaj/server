@@ -80,10 +80,27 @@ const deleteUser = async (request, response) => {
   }
 };
 const login = async (request, response) => {
+  const url =
+    user.position === 1
+      ? "/accounts"
+      : user.position === 2 || user.position === 3
+      ? "/profile"
+      : null;
   try {
     const inputUsername = request.body.username;
     const inputPassword = request.body.password;
 
+    // const userFields = Object.keys(request.body);
+    // let isEmptyField = false;
+    // for (const field of userFields) {
+    //   if (!request.body[field]) {
+    //     isEmptyField = true;
+    //     break; // Exit the loop if any empty field is found
+    //   }
+    // }
+    // if (isEmptyField) {
+    //   return response.status(401).json({ message: "All fields are required" });
+    // }
     const user = await UserModel.findOne({
       username: inputUsername,
     });
@@ -94,24 +111,17 @@ const login = async (request, response) => {
 
     if (passwordMatch) {
       var userToken = createToken(user.id);
-      const url =
-        user.position === 1
-          ? "/accounts"
-          : user.position === 2 || user.position === 3
-          ? "/profile"
-          : null;
-      response.cookie("Auth_Token", userToken, {
-        httpOnly: true,
-        maxAge: cookieExpires,
-      });
-      const myCookie = request.cookies.Auth_Token;
-
-      response.status(200).json({
-        user: user,
-        message: "Cookie set!",
-        cookie: myCookie,
-        redirectUrl: url,
-      });
+      response
+        .cookie("Auth_Token", userToken, {
+          httpOnly: true,
+          maxAge: cookieExpires,
+        })
+        .status(200)
+        .json({
+          user: user,
+          message: "Cookie set!",
+          redirectUrl: `/admin/accounts`,
+        });
     } else {
       response.status(401).json({ message: "Invalid login credentials." });
     }
@@ -122,10 +132,9 @@ const login = async (request, response) => {
 
 const logout = async (request, response) => {
   try {
-    response.clearCookie("Auth_Token");
-    response.status(200).json({
+    response.clearCookie("Auth_Token").status(200).json({
       message: "Cookie unset!",
-      redirectUrl: `/login`,
+      redirectUrl: `/`,
     });
   } catch (error) {
     response.status(500).json({ message: error.message });
@@ -141,7 +150,7 @@ const currentUser = async (request, response) => {
     }
 
     // Verify and decode the JWT token
-    jwt.verify(token, secret, async (err, decoded) => {
+    jwt.verify(token, "cookie", async (err, decoded) => {
       if (err) {
         return response.status(401).json({ message: "Invalid token" });
       }
@@ -157,11 +166,7 @@ const currentUser = async (request, response) => {
           return response.status(404).json({ message: "User not found" });
         }
 
-        response.status(200).json({
-          user: user,
-          token: token,
-          message: "Current user fetched successfully",
-        });
+        response.status(200).json(user);
       } catch (error) {
         response.status(500).json({ message: error.message });
       }
