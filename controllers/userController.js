@@ -125,10 +125,12 @@ const login = async (request, response) => {
         : null;
     const userToken = createToken(user.id);
 
-    // Set the Auth_Token cookie
+    // Set the Auth_Token cookie with SameSite=None and Secure
     response.cookie("Auth_Token", userToken, {
       httpOnly: true,
       maxAge: cookieExpires,
+      sameSite: "None", // Set SameSite attribute to None
+      secure: true, // Require HTTPS for the cookie (only for cross-site)
     });
 
     // Send the JSON response
