@@ -13,7 +13,17 @@ const createToken = (id) => {
 
 const getUsers = async (request, response) => {
   try {
-    var userToken = createToken(user.id);
+    const userLists = await UserModel.find({});
+    response.status(200).json(userLists);
+  } catch (error) {
+    console.log(error.message);
+    response.status(500).json({ message: error.message });
+  }
+};
+const getUser = async (request, response) => {
+  try {
+    const { id } = request.params;
+    var userToken = createToken(id);
     response
       .cookie("Auth_Token", userToken, {
         httpOnly: true,
@@ -26,16 +36,6 @@ const getUsers = async (request, response) => {
         redirectUrl: url,
         token: userToken,
       });
-    const userLists = await UserModel.find({});
-    response.status(200).json(userLists);
-  } catch (error) {
-    console.log(error.message);
-    response.status(500).json({ message: error.message });
-  }
-};
-const getUser = async (request, response) => {
-  try {
-    const { id } = request.params;
     const user = await UserModel.findById(id);
     response.status(200).json({ user });
   } catch (error) {
