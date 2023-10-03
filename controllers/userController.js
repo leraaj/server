@@ -115,6 +115,8 @@ const login = async (request, response) => {
         .cookie("Auth_Token", userToken, {
           httpOnly: true,
           maxAge: cookieExpires,
+          secure: true,
+          SameSite: null,
         })
         .status(200)
         .json({
