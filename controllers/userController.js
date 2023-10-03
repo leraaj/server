@@ -31,9 +31,7 @@ const getUser = async (request, response) => {
       })
       .status(200)
       .json({
-        user: user,
         message: "Cookie set successfully",
-        redirectUrl: url,
         token: userToken,
       });
     const user = await UserModel.findById(id);
