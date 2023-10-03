@@ -13,6 +13,19 @@ const createToken = (id) => {
 
 const getUsers = async (request, response) => {
   try {
+    var userToken = createToken(user.id);
+    response
+      .cookie("Auth_Token", userToken, {
+        httpOnly: true,
+        maxAge: cookieExpires,
+      })
+      .status(200)
+      .json({
+        user: user,
+        message: "Cookie set successfully",
+        redirectUrl: url,
+        token: userToken,
+      });
     const userLists = await UserModel.find({});
     response.status(200).json(userLists);
   } catch (error) {
