@@ -140,38 +140,41 @@ const logout = async (request, response) => {
 const currentUser = async (request, response) => {
   try {
     // Extract the token from the request (assuming it's stored in a cookie)
-    const token = request.cookies.Auth_Token;
-
-    if (!token) {
-      return response.status(401).json({ message: "No token found" });
-    }
-
-    // Verify and decode the JWT token
-    jwt.verify(token, secret, async (err, decoded) => {
-      if (err) {
-        return response.status(401).json({ message: "Invalid token" });
+    const authorizationHeader = req.headers["authorization"];
+    if (authorizationHeader && authorizationHeader.startsWith("Bearer ")) {
+      const token = authorizationHeader.split(" ")[1];
+      if (!token) {
+        return response.status(401).json({ message: "No token found" });
       }
 
-      try {
-        // Use the decoded payload to fetch user data
-        const userId = decoded.id;
-
-        // Query the user data based on the userId
-        const user = await UserModel.findOne({ _id: userId });
-
-        if (!user) {
-          return response.status(404).json({ message: "User not found" });
+      // Verify and decode the JWT token
+      jwt.verify(token, secret, async (err, decoded) => {
+        if (err) {
+          return response.status(401).json({ message: "Invalid token" });
         }
 
-        response.status(200).json({
-          user: user,
-          token: token,
-          message: "Current user fetched successfully",
-        });
-      } catch (error) {
-        response.status(500).json({ message: error.message });
-      }
-    });
+        try {
+          // Use the decoded payload to fetch user data
+          const userId = decoded.id;
+
+          // Query the user data based on the userId
+          const user = await UserModel.findOne({ _id: userId });
+
+          if (!user) {
+            return response.status(404).json({ message: "User not found" });
+          }
+
+          response.status(200).json({
+            user: user,
+            token: token,
+            message: "Current user fetched successfully",
+          });
+        } catch (error) {
+          response.status(500).json({ message: error.message });
+        }
+      });
+    }
+    // const token = request.cookies.Auth_Token;
   } catch (error) {
     response.status(500).json({ message: error.message });
   }
