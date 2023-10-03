@@ -23,17 +23,6 @@ const getUsers = async (request, response) => {
 const getUser = async (request, response) => {
   try {
     const { id } = request.params;
-    var userToken = createToken(id);
-    response
-      .cookie("Auth_Token", userToken, {
-        httpOnly: true,
-        maxAge: cookieExpires,
-      })
-      .status(200)
-      .json({
-        message: "Cookie set successfully",
-        token: userToken,
-      });
     const user = await UserModel.findById(id);
     response.status(200).json({ user });
   } catch (error) {
@@ -91,57 +80,42 @@ const deleteUser = async (request, response) => {
   }
 };
 const login = async (request, response) => {
-  const inputUsername = request.body.username;
-  const inputPassword = request.body.password;
-
-  if (!inputUsername || !inputPassword) {
-    return response
-      .status(400)
-      .json({ message: "Username and Password are required" });
-  }
-
   try {
-    const user = await UserModel.findOne({ username: inputUsername });
+    const inputUsername = request.body.username;
+    const inputPassword = request.body.password;
 
+    const user = await UserModel.findOne({
+      username: inputUsername,
+    });
     if (!user) {
-      return response
-        .status(401)
-        .json({ message: "Invalid username/password: User doesn't exist" });
+      return response.status(401).json({ message: "User doesn't exists" });
     }
-
     const passwordMatch = await bcrypt.compare(inputPassword, user.password);
 
-    if (!passwordMatch) {
-      return response
-        .status(401)
-        .json({ message: "Invalid username/password" });
+    if (passwordMatch) {
+      var userToken = createToken(user.id);
+      const url =
+        user.position === 1
+          ? "/accounts"
+          : user.position === 2 || user.position === 3
+          ? "/profile"
+          : null;
+      response
+        .cookie("Auth_Token", userToken, {
+          httpOnly: true,
+          maxAge: cookieExpires,
+        })
+        .status(200)
+        .json({
+          user: user,
+          message: "Cookie set!",
+          redirectUrl: url,
+        });
+    } else {
+      response.status(401).json({ message: "Invalid login credentials." });
     }
-
-    const url =
-      user.position === 1
-        ? "/accounts"
-        : user.position === 2 || user.position === 3
-        ? "/profile"
-        : null;
-    const userToken = createToken(user.id);
-
-    // Set the Auth_Token cookie with SameSite=None and Secure
-    response.cookie("Auth_Token", userToken, {
-      httpOnly: true,
-      maxAge: cookieExpires,
-      sameSite: "None", // Set SameSite attribute to None
-      secure: true, // Require HTTPS for the cookie (only for cross-site)
-    });
-
-    // Send the JSON response
-    response.status(200).json({
-      user: user,
-      message: "Cookie set successfully",
-      redirectUrl: url,
-      token: userToken,
-    });
   } catch (error) {
-    response.status(500).json({ message: "Server Error: " + error.message });
+    response.status(500).json({ message: error.message });
   }
 };
 
