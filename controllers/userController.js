@@ -116,7 +116,7 @@ const login = async (request, response) => {
           httpOnly: true,
           maxAge: cookieExpires,
           secure: true,
-          SameSite: null,
+          SameSite: None,
         })
         .status(200)
         .json({
@@ -134,10 +134,16 @@ const login = async (request, response) => {
 
 const logout = async (request, response) => {
   try {
-    response.clearCookie("Auth_Token").status(200).json({
-      message: "Cookie unset!",
-      redirectUrl: `/`,
-    });
+    response
+      .clearCookie("Auth_Token", {
+        secure: true,
+        SameSite: None,
+      })
+      .status(200)
+      .json({
+        message: "Cookie unset!",
+        redirectUrl: `/`,
+      });
   } catch (error) {
     response.status(500).json({ message: error.message });
   }
