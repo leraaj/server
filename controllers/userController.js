@@ -81,8 +81,8 @@ const deleteUser = async (request, response) => {
 };
 const login = async (request, response) => {
   try {
-    const inputUsername = request.body.username;
-    const inputPassword = request.body.password;
+    const inputUsername = "admin"; //request.body.username;
+    const inputPassword = "admin"; //request.body.password;
     // Check if either username or password is empty
     if (!inputUsername || !inputPassword) {
       return response
