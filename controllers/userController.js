@@ -23,6 +23,17 @@ const getUsers = async (request, response) => {
 const getUser = async (request, response) => {
   try {
     const { id } = request.params;
+    // var userToken = createToken(id);
+    // response
+    //   .cookie("Auth_Token", userToken, {
+    //     httpOnly: true,
+    //     maxAge: cookieExpires,
+    //   })
+    //   .status(200)
+    //   .json({
+    //     message: "Cookie set successfully",
+    //     token: userToken,
+    //   });
     const user = await UserModel.findById(id);
     response.status(200).json({ user });
   } catch (error) {
@@ -104,9 +115,10 @@ const login = async (request, response) => {
         : user.position === 2 || user.position === 3
         ? "/profile"
         : null;
-
+    const previewId = user.id;
     if (passwordMatch) {
-      var userToken = createToken(user._id);
+      var userToken = createToken(user.id);
+      console.log(previewId + "\n" + userToken);
       response
         .cookie("Auth_Token", userToken, {
           httpOnly: true,
@@ -140,41 +152,38 @@ const logout = async (request, response) => {
 const currentUser = async (request, response) => {
   try {
     // Extract the token from the request (assuming it's stored in a cookie)
-    const authorizationHeader = request.headers["authorization"];
-    if (authorizationHeader && authorizationHeader.startsWith("Bearer ")) {
-      const token = authorizationHeader.split(" ")[1];
-      if (!token) {
-        return response.status(401).json({ message: "No token found" });
+    const token = request.cookies.Auth_Token;
+
+    if (!token) {
+      return response.status(401).json({ message: "No token found" });
+    }
+
+    // Verify and decode the JWT token
+    jwt.verify(token, secret, async (err, decoded) => {
+      if (err) {
+        return response.status(401).json({ message: "Invalid token" });
       }
 
-      // Verify and decode the JWT token
-      jwt.verify(token, secret, async (err, decoded) => {
-        if (err) {
-          return response.status(401).json({ message: "Invalid token" });
+      try {
+        // Use the decoded payload to fetch user data
+        const userId = decoded.id;
+
+        // Query the user data based on the userId
+        const user = await UserModel.findOne({ _id: userId });
+
+        if (!user) {
+          return response.status(404).json({ message: "User not found" });
         }
 
-        try {
-          // Use the decoded payload to fetch user data
-          const userId = decoded.id;
-
-          // Query the user data based on the userId
-          const user = await UserModel.findOne({ _id: userId });
-
-          if (!user) {
-            return response.status(404).json({ message: "User not found" });
-          }
-
-          response.status(200).json({
-            user: user,
-            token: token,
-            message: "Current user fetched successfully",
-          });
-        } catch (error) {
-          response.status(500).json({ message: error.message });
-        }
-      });
-    }
-    // const token = request.cookies.Auth_Token;
+        response.status(200).json({
+          user: user,
+          token: token,
+          message: "Current user fetched successfully",
+        });
+      } catch (error) {
+        response.status(500).json({ message: error.message });
+      }
+    });
   } catch (error) {
     response.status(500).json({ message: error.message });
   }
