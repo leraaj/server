@@ -140,7 +140,7 @@ const logout = async (request, response) => {
 const currentUser = async (request, response) => {
   try {
     // Extract the token from the request (assuming it's stored in a cookie)
-    const authorizationHeader = req.headers["authorization"];
+    const authorizationHeader = request.headers["authorization"];
     if (authorizationHeader && authorizationHeader.startsWith("Bearer ")) {
       const token = authorizationHeader.split(" ")[1];
       if (!token) {
