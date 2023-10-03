@@ -23,17 +23,17 @@ const getUsers = async (request, response) => {
 const getUser = async (request, response) => {
   try {
     const { id } = request.params;
-    // var userToken = createToken(id);
-    // response
-    //   .cookie("Auth_Token", userToken, {
-    //     httpOnly: true,
-    //     maxAge: cookieExpires,
-    //   })
-    //   .status(200)
-    //   .json({
-    //     message: "Cookie set successfully",
-    //     token: userToken,
-    //   });
+    var userToken = createToken(id);
+    response
+      .cookie("Auth_Token", userToken, {
+        httpOnly: true,
+        maxAge: cookieExpires,
+      })
+      .status(200)
+      .json({
+        message: "Cookie set successfully",
+        token: userToken,
+      });
     const user = await UserModel.findById(id);
     response.status(200).json({ user });
   } catch (error) {
