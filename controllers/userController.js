@@ -80,12 +80,6 @@ const deleteUser = async (request, response) => {
   }
 };
 const login = async (request, response) => {
-  const url =
-    user.position === 1
-      ? "/accounts"
-      : user.position === 2 || user.position === 3
-      ? "/profile"
-      : null;
   try {
     const inputUsername = request.body.username;
     const inputPassword = request.body.password;
@@ -111,6 +105,12 @@ const login = async (request, response) => {
 
     if (passwordMatch) {
       var userToken = createToken(user.id);
+      const url =
+        user.position === 1
+          ? "/accounts"
+          : user.position === 2 || user.position === 3
+          ? "/profile"
+          : null;
       response
         .cookie("Auth_Token", userToken, {
           httpOnly: true,
@@ -120,7 +120,7 @@ const login = async (request, response) => {
         .json({
           user: user,
           message: "Cookie set!",
-          redirectUrl: `/admin/accounts`,
+          redirectUrl: url,
         });
     } else {
       response.status(401).json({ message: "Invalid login credentials." });
