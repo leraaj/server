@@ -2,13 +2,11 @@ const UserModel = require("../models/users");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
-
-const RENDER_URL = process.env.RENDER_URL;
 const secret = process.env.JWT_SECRET;
 
-const cookieExpires = 3 * 24 * 60 * 60;
+const cookieExpires = 3 * 24 * 60 * 60 * 1000;
 const createToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+  return jwt.sign({ id }, secret, {
     expiresIn: cookieExpires,
   });
 };
@@ -97,7 +95,7 @@ const login = async (request, response) => {
     if (!user) {
       return response
         .status(401)
-        .json({ message: "Invalid username/password: User doesn't exist" });
+        .json({ message: "Invalid username/password:User doesn't exists" });
     }
     const passwordMatch = await bcrypt.compare(inputPassword, user.password);
     const url =
@@ -109,25 +107,18 @@ const login = async (request, response) => {
 
     if (passwordMatch) {
       var userToken = createToken(user.id);
-
-      // Set CORS headers to allow requests from your frontend
-      response.setHeader("Access-Control-Allow-Origin", RENDER_URL);
-      response.setHeader("Access-Control-Allow-Credentials", "true");
-
-      // Set the cookie with proper options
-      response.cookie("Auth_Token", userToken, {
-        httpOnly: true,
-        maxAge: cookieExpires * 1000, // Convert seconds to milliseconds
-        secure: process.env.NODE_ENV === "production", // Only secure in production
-        sameSite: "Strict", // Set the sameSite attribute
-      });
-
-      response.status(200).json({
-        user: user,
-        message: "Cookie set successfully",
-        redirectUrl: url,
-        token: userToken,
-      });
+      response
+        .cookie("Auth_Token", userToken, {
+          httpOnly: true,
+          maxAge: "1d",
+        })
+        .status(200)
+        .json({
+          user: user,
+          message: "Cookie set successfully",
+          redirectUrl: url,
+          token: userToken,
+        });
     } else {
       response.status(401).json({ message: "Invalid username/password" });
     }
@@ -135,7 +126,6 @@ const login = async (request, response) => {
     response.status(500).json({ message: "Server Error: " + error.message });
   }
 };
-
 const logout = async (request, response) => {
   try {
     response.clearCookie("Auth_Token");
