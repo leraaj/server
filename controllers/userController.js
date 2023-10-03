@@ -100,17 +100,18 @@ const login = async (request, response) => {
           : user.position === 2 || user.position === 3
           ? "/profile"
           : null;
-      response
-        .cookie("Auth_Token", userToken, {
-          httpOnly: true,
-          maxAge: cookieExpires,
-        })
-        .status(200)
-        .json({
-          user: user,
-          message: "Cookie set!",
-          redirectUrl: url,
-        });
+      response.cookie("Auth_Token", userToken, {
+        httpOnly: true,
+        maxAge: cookieExpires,
+      });
+      const myCookie = req.cookies.myCookie;
+
+      response.status(200).json({
+        user: user,
+        message: "Cookie set!",
+        cookie: myCookie,
+        redirectUrl: url,
+      });
     } else {
       response.status(401).json({ message: "Invalid login credentials." });
     }
@@ -124,7 +125,7 @@ const logout = async (request, response) => {
     response.clearCookie("Auth_Token");
     response.status(200).json({
       message: "Cookie unset!",
-      redirectUrl: `/`,
+      redirectUrl: `/login`,
     });
   } catch (error) {
     response.status(500).json({ message: error.message });
