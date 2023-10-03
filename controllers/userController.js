@@ -110,7 +110,7 @@ const login = async (request, response) => {
       response
         .cookie("Auth_Token", userToken, {
           httpOnly: true,
-          maxAge: "1d",
+          maxAge: cookieExpires,
         })
         .status(200)
         .json({
