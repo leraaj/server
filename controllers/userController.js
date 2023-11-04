@@ -83,18 +83,6 @@ const login = async (request, response) => {
   try {
     const inputUsername = request.body.username;
     const inputPassword = request.body.password;
-
-    // const userFields = Object.keys(request.body);
-    // let isEmptyField = false;
-    // for (const field of userFields) {
-    //   if (!request.body[field]) {
-    //     isEmptyField = true;
-    //     break; // Exit the loop if any empty field is found
-    //   }
-    // }
-    // if (isEmptyField) {
-    //   return response.status(401).json({ message: "All fields are required" });
-    // }
     const user = await UserModel.findOne({
       username: inputUsername,
     });
@@ -115,14 +103,13 @@ const login = async (request, response) => {
         .cookie("Auth_Token", userToken, {
           httpOnly: true,
           maxAge: cookieExpires,
-          secure: true,
-          SameSite: None,
         })
         .status(200)
         .json({
           user: user,
           message: "Cookie set!",
           redirectUrl: url,
+          token: userToken,
         });
     } else {
       response.status(401).json({ message: "Invalid login credentials." });
@@ -134,16 +121,11 @@ const login = async (request, response) => {
 
 const logout = async (request, response) => {
   try {
-    response
-      .clearCookie("Auth_Token", {
-        secure: true,
-        SameSite: None,
-      })
-      .status(200)
-      .json({
-        message: "Cookie unset!",
-        redirectUrl: `/`,
-      });
+    response.clearCookie("Auth_Token");
+    response.status(200).json({
+      message: "Cookie unset!",
+      redirectUrl: `/`,
+    });
   } catch (error) {
     response.status(500).json({ message: error.message });
   }
@@ -173,8 +155,10 @@ const currentUser = async (request, response) => {
         if (!user) {
           return response.status(404).json({ message: "User not found" });
         }
-
-        response.status(200).json(user);
+        const position = user.position;
+        response
+          .status(200)
+          .json({ user: user, position: position, token: token });
       } catch (error) {
         response.status(500).json({ message: error.message });
       }

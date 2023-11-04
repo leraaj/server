@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "darkshot-productions",
+  "private_key_id": "014bb438e8557f0bc5d480fa48e480f8fb3b4a1e",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC0zWKyg3ZPdmGl\nrqvT3oWcXxmm0TjmImgpZIYQtp0/vvc04BVejDmLAMsjEGP/hNsnChf1Lxexnpy9\nK1uXBe5CLR7RZwzM2jZeD33Zxl2rXl1M/ZPw1KthP5If8uqXDyfxZp2zuHaChbOn\ntneEsDoFGTsaALEucDibDSosHCmXLterwhgF24CrHA82EP7m+025ic7HFZ1UTp5h\nJRvZDg+Bdip5qTHWbZTSax8jmJ3W4a1Dk4bBjadtuY2QBiV+w0m6NxGeyb+at9RZ\noWDrhGIkGJ3C36zncL2G3azsV5N2JDgjicJuIzby9A6uKlbjKxoy3OHnW1C5e5Yb\nrkIuSchVAgMBAAECggEABccAWIr0h10q3p6iaqPpf2csjH+SrWE7vy2Go9cUrET1\nD5v6ItTL6+yru7maMGqK5DL23q9RYawbVGd5HEN6FbmXtVebzu9Jcx+p76uz3ODS\n42hrnJ5MbFBEjOp4DjlTl0D7rhKpZXSnRSctUjCdZ1dN46qnqWpi7KrIMQj6ApTU\nodT25v0yeeua+CTE+Cr3NQajqqeebkX0HmasSHAhyexVRYvdRn7Xon6yoTFlQr/I\nHOx8cH/XEGUX8sNSfqQSl7z5sTg62b4950AKfqAiFH8Qybc9dZEjxrcoxh95tfCK\nD3iSHpxN+zIwUOmTwirKgM5FmJG7+Y3jXQytwVU9uwKBgQDrw03AO4uOKsABYebT\nxYx6U9GXxygzBWbvDKtcatqFCM4hEod19jNJDBZ5dpe6NAu2T9uxbpDovAUG4FB2\nih7/NPb+pZ5HpBGu5+2N79Df9XFOUVA/0UsFZNn5D4Syt1VklG1H3SQEDoA336AZ\nbNCZT4yFtvB+tz0//XWJ/SbITwKBgQDEUl4Lo0NxHJ5dW+iCa7RL1FQnmgroDLlO\nbam5/1YMFZU1KSMkIG6uoRENG5xzZemFLbX++HOZcSlJ4ylwC4iySc+Tu9+wXLY0\nGBVyc3G8f1EniYRHziIh2eXv+OjSG1YxDedALCzI4tew26IY+7dOjVzm9LOHq1gz\nfWI0XtDYGwKBgQCjip3jjCqZWrRIATaSjkWNEZmhVGhhRA0MI9i2yfR9Ngduz6Ch\nxj/7GuR4KzjC1JmPRMQbx5vDpbFC/NUz9UndNEtlh1NNVNVjY8TYoZNd169aaXNm\nYXNN8ZB2gTpGkoAsvf00TYVPPxPYLkqreF0XDCRpGOaor8lQGyyupKmDZwKBgQCr\nAYxF2tqeJm2TqMEpCaQtATCkpjul0Z+AP2m+SDmtoQctHT4s88s1dbsijdCDfFwi\n06RaChS3rahnYeXwYTubAUw8xUOdncRgMDJOVVzW8pfANrrwyQ9WKTVvCIPUsFct\nt4ydi10fRujWdxoFZQ1Q8TXhP3k6TfgwMaFfOM/1zQKBgQCmZFSm57QqWcHzJqFI\nQ0mdfgIWHfu9IY+Z42CJESak2CEozHUaLQCWQLS+6joMYkU07TOvDoVD57AJqxYR\ntkyfmsUwQJben8ho15zvkUdSFh36+6/AOYasMp7roFxbagMU//+xfdotZKkNSh+I\nsLPUi3xGgDICUBqCffHdk6zcgA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "darkshotsdrive@darkshot-productions.iam.gserviceaccount.com",
+  "client_id": "116244244845292133958",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/darkshotsdrive%40darkshot-productions.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

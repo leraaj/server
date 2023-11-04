@@ -22,6 +22,15 @@ const userSchema = new mongoose.Schema(
       // 2 = client
       // 3 = applicant
     },
+    applicationStatus: {
+      type: Number,
+      required: [true, "Please select status"],
+      // { value: 1, label: "All users" },
+      // { value: 2, label: "Pending" },
+      // { value: 3, label: "For review" },
+      // { value: 4, label: "Accepted" },
+      // { value: 5, label: "Rejected" },
+    },
   },
   {
     timestamps: true,
