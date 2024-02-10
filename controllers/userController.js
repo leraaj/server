@@ -107,8 +107,8 @@ const login = async (request, response) => {
         .status(200)
         .json({
           user: user,
-          message: "Cookie set!",
-          redirectUrl: url,
+          // message: "Cookie set!",
+          // redirectUrl: url,
           token: userToken,
         });
     } else {
@@ -155,10 +155,7 @@ const currentUser = async (request, response) => {
         if (!user) {
           return response.status(404).json({ message: "User not found" });
         }
-        const position = user.position;
-        response
-          .status(200)
-          .json({ user: user, position: position, token: token });
+        response.status(200).json({ user: user, token: token });
       } catch (error) {
         response.status(500).json({ message: error.message });
       }
