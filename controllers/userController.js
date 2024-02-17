@@ -49,7 +49,7 @@ const addUser = async (request, response) => {
       position: position,
       applicationStatus: applicationStatus,
     });
-    response.status(200).json(addedUser);
+    response.status(201).json(addedUser);
   } catch (error) {
     console.log(error.message);
     response.status(500).json({ message: error.message });
