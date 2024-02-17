@@ -31,7 +31,24 @@ const getUser = async (request, response) => {
 };
 const addUser = async (request, response) => {
   try {
-    const addedUser = await UserModel.create(request.body);
+    const {
+      fullName,
+      email,
+      contact,
+      username,
+      password,
+      position,
+      applicationStatus,
+    } = request.body;
+    const addedUser = await UserModel.create({
+      fullName: fullName,
+      email: email,
+      contact: contact,
+      username: username,
+      password: password,
+      position: position,
+      applicationStatus: applicationStatus,
+    });
     response.status(200).json(addedUser);
   } catch (error) {
     console.log(error.message);

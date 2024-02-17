@@ -16,11 +16,11 @@ router.post("/user/login", login);
 router.post("/user/logout", logout);
 router.post("/user/current-user", currentUser);
 router.get("/users", getUsers);
-// The following requires a TOKEN for security purposes
-router.use(requireAuth);
-router.get("/user/:id", getUser);
 router.post("/user", addUser);
-router.put("/user/:id", updateUser);
 router.delete("/user/:id", deleteUser);
+router.get("/user/:id", getUser);
+router.put("/user/:id", updateUser);
+// The following requires a TOKEN for security purposes
+// router.use(requireAuth);
 
 module.exports = router;
