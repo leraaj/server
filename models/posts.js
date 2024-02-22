@@ -38,20 +38,3 @@ postSchema.post("findOneAndUpdate", function (doc, next) {
 });
 const PostModel = mongoose.model("posts", postSchema);
 module.exports = PostModel;
-
-// const convo = [
-//   {
-//     convoId:"",
-//     message: {
-//       author:"",
-//       text: "",
-//       file: {
-//         name: "",
-//         type: "",
-//         date: "",
-//       },
-//       urlLink: "",
-//       dateTimePosted: "dapat date, timezone ph",
-//     },
-//   },
-// ];
