@@ -5,15 +5,70 @@ const userSchema = new mongoose.Schema(
   {
     fullName: {
       type: String,
-      required: [true, "Please enter fullname"],
-      unique: true,
+      required: [true, "Please enter your fullname"],
+      validate: [
+        {
+          validator: async function (value) {
+            // Check uniqueness
+            const user = await this.constructor.findOne({ fullName: value });
+            return !user;
+          },
+          message: "This fullname has already been used",
+        },
+      ],
     },
-    contact: { type: String, required: true },
-    email: { type: String, required: true },
-    username: { type: String, required: true, unique: true },
+    contact: {
+      type: String,
+      required: [true, "Please enter your contact"],
+      validate: [
+        {
+          validator: async function (value) {
+            // Check uniqueness
+            const user = await this.constructor.findOne({ contact: value });
+            return !user;
+          },
+          message: "This contact number has already been used",
+        },
+        {
+          validator: function (value) {
+            // Check maximum length
+            return value.length >= 11;
+          },
+          message: "Contact number must be atleast 11 characters",
+        },
+      ],
+    },
+    email: {
+      type: String,
+      required: [true, "Please enter your email"],
+      validate: [
+        {
+          validator: async function (value) {
+            // Check uniqueness
+            const user = await this.constructor.findOne({ email: value });
+            return !user;
+          },
+          message: "This email has already been used",
+        },
+      ],
+    },
+    username: {
+      type: String,
+      required: [true, "Please enter your username"],
+      validate: [
+        {
+          validator: async function (value) {
+            // Check uniqueness
+            const user = await this.constructor.findOne({ username: value });
+            return !user;
+          },
+          message: "This username has already been used",
+        },
+      ],
+    },
     password: {
       type: String,
-      required: [true, "Please enter password"],
+      required: [true, "Please enter your password"],
     },
     position: {
       type: Number,

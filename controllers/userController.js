@@ -40,21 +40,44 @@ const addUser = async (request, response) => {
       position,
       applicationStatus,
     } = request.body;
-    const addedUser = await UserModel.create({
-      fullName: fullName,
-      email: email,
-      contact: contact,
-      username: username,
-      password: password,
-      position: position,
-      applicationStatus: applicationStatus,
+
+    // Create a new user instance without saving it to catch validation errors
+    const user = new UserModel({
+      fullName,
+      email,
+      contact,
+      username,
+      password,
+      position,
+      applicationStatus,
     });
+
+    // Validate the user data
+    await user.validate();
+
+    // If validation passes, save the user
+    const addedUser = await user.save();
+
     response.status(201).json(addedUser);
   } catch (error) {
-    console.log(error.message);
-    response.status(500).json({ message: error.message });
+    const validationErrors = {};
+    if (error.name === "ValidationError") {
+      // Validation error occurred
+      if (error.errors && Object.keys(error.errors).length > 0) {
+        // Extract and send specific validation error messages
+        for (const field in error.errors) {
+          validationErrors[field] = error.errors[field].message;
+        }
+      }
+      response.status(400).json({ errors: validationErrors });
+    } else {
+      // Other types of errors (e.g., server error)
+      console.error(error.message);
+      response.status(500).json({ message: "Internal Server Error" });
+    }
   }
 };
+
 const updateUser = async (request, response) => {
   try {
     const { id } = request.params;
@@ -135,7 +158,6 @@ const login = async (request, response) => {
     response.status(500).json({ message: error.message });
   }
 };
-
 const logout = async (request, response) => {
   try {
     response.clearCookie("Auth_Token");
