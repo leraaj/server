@@ -25,7 +25,6 @@ postSchema.post("save", function (doc, next) {
   console.log("new posts was created & saved", doc);
   next();
 });
-
 postSchema.pre("findOneAndUpdate", async function (next) {
   try {
     next();
@@ -39,3 +38,20 @@ postSchema.post("findOneAndUpdate", function (doc, next) {
 });
 const PostModel = mongoose.model("posts", postSchema);
 module.exports = PostModel;
+
+// const convo = [
+//   {
+//     convoId:"",
+//     message: {
+//       author:"",
+//       text: "",
+//       file: {
+//         name: "",
+//         type: "",
+//         date: "",
+//       },
+//       urlLink: "",
+//       dateTimePosted: "dapat date, timezone ph",
+//     },
+//   },
+// ];
