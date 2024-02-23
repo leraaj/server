@@ -86,6 +86,12 @@ const userSchema = new mongoose.Schema(
       // { value: 4, label: "Accepted" },
       // { value: 5, label: "Rejected" },
     },
+    conversations: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "conversations", // Reference to the 'conversations' collection
+      },
+    ],
   },
   {
     timestamps: true,

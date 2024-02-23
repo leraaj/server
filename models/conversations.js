@@ -42,5 +42,5 @@ conversationSchema.post("findOneAndUpdate", function (doc, next) {
   console.log("conversation was updated & saved", doc);
   next();
 });
-const ConversationModel = mongoose.model("posts", conversationSchema);
+const ConversationModel = mongoose.model("conversations", conversationSchema);
 module.exports = ConversationModel;
