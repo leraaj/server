@@ -23,7 +23,7 @@ app.use("/api", postRoute);
 //
 mongoose.set("strictQuery", false);
 mongoose
-  .connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(MONGO_URL)
   .then(() => {
     app.listen(PORT, () => {
       console.log(`Server is running on port: ${PORT}`);
