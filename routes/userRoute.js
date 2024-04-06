@@ -15,6 +15,7 @@ const {
 router.post("/user/login", login);
 router.post("/user/logout", logout);
 router.post("/user/current-user", currentUser);
+// router.post(requireAuth);
 router.get("/users", getUsers);
 router.post("/user", addUser);
 router.delete("/user/:id", deleteUser);

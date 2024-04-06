@@ -2,11 +2,11 @@ const UserModel = require("../models/users");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
-const secret = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const cookieExpires = 3 * 24 * 60 * 60 * 1000;
 const createToken = (id) => {
-  return jwt.sign({ id }, secret, {
+  return jwt.sign({ id }, JWT_SECRET, {
     expiresIn: cookieExpires,
   });
 };
@@ -94,15 +94,21 @@ const updateUser = async (request, response) => {
 
     response.status(200).json({ user });
   } catch (error) {
-    if (error.code === 11000 || error.code === 11001) {
-      // Handle duplicate field error here
-      return response.status(400).json({
-        message: "Duplicate field value. This value already exists.",
-        field: error.keyValue, // The duplicate field and value
-      });
+    const validationErrors = {};
+    if (error.name === "ValidationError") {
+      // Validation error occurred
+      if (error.errors && Object.keys(error.errors).length > 0) {
+        // Extract and send specific validation error messages
+        for (const field in error.errors) {
+          validationErrors[field] = error.errors[field].message;
+        }
+      }
+      response.status(400).json({ errors: validationErrors });
+    } else {
+      // Other types of errors (e.g., server error)
+      console.error(error.message);
+      response.status(500).json({ message: "Internal Server Error" });
     }
-    // Other validation or save errors
-    response.status(500).json({ message: error.message, status: error.status });
   }
 };
 const deleteUser = async (request, response) => {
@@ -127,18 +133,14 @@ const login = async (request, response) => {
       username: inputUsername,
     });
     if (!user) {
-      return response.status(401).json({ message: "User doesn't exists" });
+      return response
+        .status(401)
+        .json({ message: "Invalid username or password" });
+      // User does not exists
     }
     const passwordMatch = await bcrypt.compare(inputPassword, user.password);
-
     if (passwordMatch) {
       var userToken = createToken(user.id);
-      const url =
-        user.position === 1
-          ? "/accounts"
-          : user.position === 2 || user.position === 3
-          ? "/profile"
-          : null;
       response
         .cookie("Auth_Token", userToken, {
           httpOnly: true,
@@ -147,12 +149,11 @@ const login = async (request, response) => {
         .status(200)
         .json({
           user: user,
-          // message: "Cookie set!",
-          // redirectUrl: url,
           token: userToken,
         });
     } else {
-      response.status(401).json({ message: "Invalid login credentials." });
+      response.status(401).json({ message: "Invalid username or password" });
+      // Invalid credentials
     }
   } catch (error) {
     response.status(500).json({ message: error.message });
@@ -173,22 +174,16 @@ const currentUser = async (request, response) => {
   try {
     // Extract the token from the request (assuming it's stored in a cookie)
     const token = request.cookies.Auth_Token;
-
     if (!token) {
       return response.status(401).json({ message: "No token found" });
     }
-
-    // Verify and decode the JWT token
     jwt.verify(token, "cookie", async (err, decoded) => {
       if (err) {
         return response.status(401).json({ message: "Invalid token" });
       }
 
       try {
-        // Use the decoded payload to fetch user data
         const userId = decoded.id;
-
-        // Query the user data based on the userId
         const user = await UserModel.findOne({ _id: userId });
 
         if (!user) {

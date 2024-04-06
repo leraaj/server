@@ -10,8 +10,8 @@ const postSchema = new mongoose.Schema(
     // 2 = position
     // 3 = person
     // 4 = project
-    image_name: { type: String, required: true },
-    media_file: { type: String, required: true },
+    image_names: [{ type: String, required: true }],
+    media_files: [{ type: String, required: true }],
   },
   {
     timestamps: true,
