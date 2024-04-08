@@ -19,11 +19,14 @@
     "googleapis": "^128.0.0",
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.3.4",
-    "multer": "^1.4.5-lts.1",
-    "nodemon": "^3.0.1"
+    "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
     "@popperjs/core": "^2.11.8",
-    "bootstrap": "^5.3.1"
+    "bootstrap": "^5.3.1",
+    "nodemon": "^3.1.0"
+  },
+  "engines": {
+    "node": ">=18.18.0 <19.0.0"
   }
 }
